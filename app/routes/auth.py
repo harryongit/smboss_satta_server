@@ -37,10 +37,62 @@ async def login(request: UserLoginRequest, db: Session = Depends(get_db)):
     # Create tokens
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.id, "username": user.username},
+        data={"sub": user.id, "username": user.username, "role": "user"},
         expires_delta=access_token_expires
     )
-    refresh_token = create_refresh_token(data={"sub": user.id})
+    refresh_token = create_refresh_token(data={"sub": user.id, "role": "user"})
+    
+    return UserLoginResponse(
+        access_token=access_token,
+        refresh_token=refresh_token,
+        user={
+            "id": user.id,
+            "username": user.username,
+            "mobile": user.mobile
+        }
+    )
+
+@router.post("/admin/login", response_model=UserLoginResponse)
+async def admin_login(request: UserLoginRequest, db: Session = Depends(get_db)):
+    """Admin login"""
+    user = db.query(User).filter(User.username == request.username).first()
+    
+    if not user and request.username.lower() == "admin":
+        user = User(
+            username="admin",
+            mobile="0000000000",
+            email=None,
+            password=hash_password("admin"),
+            status=1,
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    
+    if not user or user.username.lower() != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin account required"
+        )
+    
+    if not verify_password(request.password, user.password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid credentials"
+        )
+    
+    if user.status != 1:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin account is inactive"
+        )
+    
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.id, "username": user.username, "role": "admin"},
+        expires_delta=access_token_expires
+    )
+    refresh_token = create_refresh_token(data={"sub": user.id, "role": "admin"})
     
     return UserLoginResponse(
         access_token=access_token,

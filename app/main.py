@@ -22,7 +22,7 @@ logger = setup_logger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
-    logger.info("Starting SMS BOSS FastAPI Application")
+    logger.info("Starting SMBOSS FastAPI Application")
     
     # Create tables
     Base.metadata.create_all(bind=engine)
@@ -35,13 +35,13 @@ async def lifespan(app: FastAPI):
     yield
     
     # Shutdown
-    logger.info("Shutting down SMS BOSS Application")
+    logger.info("Shutting down SMBOSS Application")
     scheduler.shutdown()
     logger.info("Background jobs scheduler stopped")
 
 # Create FastAPI app
 app = FastAPI(
-    title="SMS BOSS API",
+    title="SMBOSS API",
     description="Satta Matka Result Tracking System",
     version="2.0.0",
     lifespan=lifespan

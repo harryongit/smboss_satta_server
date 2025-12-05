@@ -1,10 +1,10 @@
 """Database connection and session management"""
 from sqlalchemy import create_engine, inspect
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from typing import Generator
 import os
 from app.core.config import settings
+from app.models import Base
 
 # Database URL
 if settings.DATABASE_TYPE == "mysql":
@@ -30,9 +30,6 @@ SessionLocal = sessionmaker(
     autoflush=False,
     bind=engine
 )
-
-# Base class for models
-Base = declarative_base()
 
 # Database dependency
 def get_db() -> Generator:

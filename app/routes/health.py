@@ -30,6 +30,6 @@ async def root():
     """Root endpoint"""
     return {
         "status": "success",
-        "message": "SMS BOSS API v2.0.0",
+        "message": "SMBOSS API v2.0.0",
         "timestamp": datetime.utcnow().isoformat()
     }

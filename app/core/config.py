@@ -5,7 +5,7 @@ import os
 
 class Settings(BaseSettings):
     # Application
-    APP_NAME: str = "SMS BOSS API"
+    APP_NAME: str = "SMBOSS API"
     APP_VERSION: str = "2.0.0"
     DEBUG: bool = os.getenv("DEBUG", "False") == "True"
     

@@ -1,0 +1,276 @@
+{
+  "info": {
+    "name": "SMBOSS API v2.0 - Postman",
+    "description": "Collection to test SMBOSS API endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "2.0.0"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" },
+    { "key": "refresh_token", "value": "" },
+    { "key": "market_id", "value": "1" },
+    { "key": "result_id", "value": "1" },
+    { "key": "user_id", "value": "1" },
+    { "key": "date", "value": "2025-12-05" }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"StrongPass1\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.access_token) pm.collectionVariables.set('token', json.access_token);",
+                  "if (json.refresh_token) pm.collectionVariables.set('refresh_token', json.refresh_token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/refresh-token",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "refresh-token"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{refresh_token}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Verify Token",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "verify"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Markets",
+      "item": [
+        {
+          "name": "List Markets",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/markets", "host": ["{{baseUrl}}"], "path": ["api","v1","markets"] }
+          }
+        },
+        {
+          "name": "Market Details",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/markets/{{market_id}}", "host": ["{{baseUrl}}"], "path": ["api","v1","markets","{{market_id}}"] }
+          }
+        },
+        {
+          "name": "Create Market (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/api/v1/markets", "host": ["{{baseUrl}}"], "path": ["api","v1","markets"] },
+            "body": { "mode": "raw", "raw": "{\n  \"game\": \"KALYAN\",\n  \"open_time\": null,\n  \"close_time\": null,\n  \"status\": 1\n}" }
+          }
+        },
+        {
+          "name": "Update Market (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/api/v1/markets/{{market_id}}", "host": ["{{baseUrl}}"], "path": ["api","v1","markets","{{market_id}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"game\": \"KALYAN\",\n  \"open_time\": null,\n  \"close_time\": null,\n  \"status\": 1\n}" }
+          }
+        },
+        {
+          "name": "Delete Market (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+            "url": { "raw": "{{baseUrl}}/api/v1/markets/{{market_id}}", "host": ["{{baseUrl}}"], "path": ["api","v1","markets","{{market_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Results",
+      "item": [
+        {
+          "name": "Results by Date",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/results?target_date={{date}}", "host": ["{{baseUrl}}"], "path": ["api","v1","results"], "query": [ {"key":"target_date","value":"{{date}}"} ] }
+          }
+        },
+        {
+          "name": "Live Results",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/results/live?target_date={{date}}", "host": ["{{baseUrl}}"], "path": ["api","v1","results","live"], "query": [ {"key":"target_date","value":"{{date}}"} ] }
+          }
+        },
+        {
+          "name": "Market History",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/results/{{market_id}}/history?limit=30", "host": ["{{baseUrl}}"], "path": ["api","v1","results","{{market_id}}","history"], "query": [ {"key":"limit","value":"30"} ] }
+          }
+        },
+        {
+          "name": "Create Result (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/api/v1/results", "host": ["{{baseUrl}}"], "path": ["api","v1","results"] },
+            "body": { "mode": "raw", "raw": "{\n  \"market_id\": {{market_id}},\n  \"result\": \"123-45-678\",\n  \"result_date\": \"{{date}}\"\n}" }
+          }
+        },
+        {
+          "name": "Update Result (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/api/v1/results/{{result_id}}", "host": ["{{baseUrl}}"], "path": ["api","v1","results","{{result_id}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"market_id\": {{market_id}},\n  \"result\": \"999-99-999\",\n  \"result_date\": \"{{date}}\"\n}" }
+          }
+        },
+        {
+          "name": "Delete Result (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+            "url": { "raw": "{{baseUrl}}/api/v1/results/{{result_id}}", "host": ["{{baseUrl}}"], "path": ["api","v1","results","{{result_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Dashboard",
+          "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/api/v1/admin/dashboard", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","dashboard"] } }
+        },
+        {
+          "name": "List Users",
+          "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/api/v1/admin/users?limit=50&offset=0", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","users"], "query": [ {"key":"limit","value":"50"}, {"key":"offset","value":"0"} ] } }
+        },
+        {
+          "name": "Create User",
+          "request": { "method": "POST", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ], "url": { "raw": "{{baseUrl}}/api/v1/admin/users", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","users"] }, "body": { "mode": "raw", "raw": "{\n  \"username\": \"newuser\",\n  \"mobile\": \"9999999999\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"StrongPass1\"\n}" } }
+        },
+        {
+          "name": "Update User",
+          "request": { "method": "PUT", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ], "url": { "raw": "{{baseUrl}}/api/v1/admin/users/{{user_id}}", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","users","{{user_id}}"] }, "body": { "mode": "raw", "raw": "{\n  \"mobile\": \"8888888888\",\n  \"status\": 1\n}" } }
+        },
+        {
+          "name": "Delete User",
+          "request": { "method": "DELETE", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/api/v1/admin/users/{{user_id}}", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","users","{{user_id}}"] } }
+        },
+        {
+          "name": "Activate User",
+          "request": { "method": "POST", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/api/v1/admin/users/{{user_id}}/activate", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","users","{{user_id}}","activate"] } }
+        },
+        {
+          "name": "Deactivate User",
+          "request": { "method": "POST", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/api/v1/admin/users/{{user_id}}/deactivate", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","users","{{user_id}}","deactivate"] } }
+        },
+        {
+          "name": "List Markets (Admin View)",
+          "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/api/v1/admin/markets", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","markets"] } }
+        },
+        {
+          "name": "Admin Rashi List",
+          "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/api/v1/admin/rashi?target_date={{date}}", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","rashi"], "query": [ {"key":"target_date","value":"{{date}}"} ] } }
+        },
+        {
+          "name": "Admin Add Rashi",
+          "request": { "method": "POST", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ], "url": { "raw": "{{baseUrl}}/api/v1/admin/rashi", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","rashi"] }, "body": { "mode": "raw", "raw": "{\n  \"rashi_name\": \"Mesha\",\n  \"result\": \"12-34-56\",\n  \"result_date\": \"{{date}}\"\n}" } }
+        },
+        {
+          "name": "Admin Starline List",
+          "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/api/v1/admin/starline?market_id={{market_id}}&target_date={{date}}", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","starline"], "query": [ {"key":"market_id","value":"{{market_id}}"}, {"key":"target_date","value":"{{date}}"} ] } }
+        },
+        {
+          "name": "Admin Add Prediction",
+          "request": { "method": "POST", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ], "url": { "raw": "{{baseUrl}}/api/v1/admin/predictions", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","predictions"] }, "body": { "mode": "raw", "raw": "{\n  \"market_id\": {{market_id}},\n  \"result\": \"55\",\n  \"added_date\": \"{{date}}\",\n  \"accuracy\": 80\n}" } }
+        },
+        {
+          "name": "Admin Sync Results",
+          "request": { "method": "POST", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/api/v1/admin/sync", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","sync"] } }
+        },
+        {
+          "name": "Admin Audit Logs",
+          "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/api/v1/admin/logs?user_id={{user_id}}", "host": ["{{baseUrl}}"], "path": ["api","v1","admin","logs"], "query": [ {"key":"user_id","value":"{{user_id}}"} ] } }
+        }
+      ]
+    },
+    {
+      "name": "Public",
+      "item": [
+        { "name": "Public Markets", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/public/markets", "host": ["{{baseUrl}}"], "path": ["api","v1","public","markets"] } } },
+        { "name": "Public Results", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/public/results", "host": ["{{baseUrl}}"], "path": ["api","v1","public","results"] } } },
+        { "name": "Public Rashi", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/public/rashi", "host": ["{{baseUrl}}"], "path": ["api","v1","public","rashi"] } } },
+        { "name": "Public Offers", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/public/offers", "host": ["{{baseUrl}}"], "path": ["api","v1","public","offers"] } } }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        { "name": "Root", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] } } },
+        { "name": "Health", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"] } } },
+        { "name": "Health DB", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/health/db", "host": ["{{baseUrl}}"], "path": ["health","db"] } } }
+      ]
+    }
+  ]
+}
