@@ -1,15 +1,20 @@
-from typing import Dict, Any
+"""Result schemas"""
+from pydantic import BaseModel, Field
+from typing import Optional
+from datetime import date, datetime
 
-from pydantic import BaseModel
+class ResultCreateRequest(BaseModel):
+    market_id: int
+    result: str = Field(..., min_length=1, max_length=20)
+    result_date: date
 
-
-class ResultUpload(BaseModel):
-    game_id: int
-    payload: Dict[str, Any]
-
-
-class ResultOut(BaseModel):
-    id: int
-    game_id: int
-    payload: Dict[str, Any]
-
+class ResultResponse(BaseModel):
+    sr_no: int
+    market_id: int
+    result: str
+    result_date: date
+    status: int
+    date: datetime
+    
+    class Config:
+        from_attributes = True

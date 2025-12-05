@@ -1,18 +1,53 @@
-# app/main.py
-from fastapi import FastAPI
+"""FastAPI main application"""
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from app.database import engine, Base
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.responses import JSONResponse
+from contextlib import asynccontextmanager
+import logging
+from datetime import datetime
 
-# Create tables
-Base.metadata.create_all(bind=engine)
+# Import all routes
+from app.routes import health, auth, markets, results, admin, public
+from app.core.database import engine, Base, get_db
+from app.core.exceptions import HTTPException, ValidationError, DatabaseError
+from app.core.config import settings
+from app.utils.logger import setup_logger
+from app.jobs.scheduler import scheduler
 
+# Setup logging
+logger = setup_logger(__name__)
+
+# Lifespan event handler
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    logger.info("Starting SMS BOSS FastAPI Application")
+    
+    # Create tables
+    Base.metadata.create_all(bind=engine)
+    logger.info("Database tables created")
+    
+    # Start background scheduler
+    scheduler.start()
+    logger.info("Background jobs scheduler started")
+    
+    yield
+    
+    # Shutdown
+    logger.info("Shutting down SMS BOSS Application")
+    scheduler.shutdown()
+    logger.info("Background jobs scheduler stopped")
+
+# Create FastAPI app
 app = FastAPI(
-    title="SMBOSS API",
-    description="Satta Matka Result Management System",
-    version="1.0.0"
+    title="SMS BOSS API",
+    description="Satta Matka Result Tracking System",
+    version="2.0.0",
+    lifespan=lifespan
 )
 
-# CORS Configuration (Allow all for development)
+# CORS Middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -21,34 +56,56 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include Public APIs (No auth needed)
-from app.api.v1.public import markets, results, rashi, starline, special
-app.include_router(markets.router, prefix="/api", tags=["public-markets"])
-app.include_router(results.router, prefix="/api", tags=["public-results"])
-app.include_router(rashi.router, prefix="/api", tags=["public-rashi"])
-app.include_router(starline.router, prefix="/api", tags=["public-starline"])
-app.include_router(special.router, prefix="/api", tags=["public-special"])
+# Security Middleware
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=["localhost", "127.0.0.1", "yourdomain.com"]
+)
 
-# Include Admin APIs (Auth required)
-from app.api.v1.admin import auth as admin_auth, users, results as admin_results
-from app.api.v1.admin import games, reports, dashboard
-app.include_router(admin_auth.router, prefix="/admin/auth", tags=["admin-auth"])
-app.include_router(users.router, prefix="/admin/users", tags=["admin-users"])
-app.include_router(admin_results.router, prefix="/admin/results", tags=["admin-results"])
-app.include_router(games.router, prefix="/admin/games", tags=["admin-games"])
-app.include_router(reports.router, prefix="/admin/reports", tags=["admin-reports"])
-app.include_router(dashboard.router, prefix="/admin/dashboard", tags=["admin-dashboard"])
+# Exception handlers
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail}
+    )
 
-# Include User APIs (Auth required)
-from app.api.v1.user import auth as user_auth, results as user_results
-from app.api.v1.user import games as user_games, dashboard as user_dashboard
-app.include_router(user_auth.router, prefix="/user/auth", tags=["user-auth"])
-app.include_router(user_results.router, prefix="/user/results", tags=["user-results"])
-app.include_router(user_games.router, prefix="/user/games", tags=["user-games"])
-app.include_router(user_dashboard.router, prefix="/user/dashboard", tags=["user-dashboard"])
+@app.exception_handler(ValidationError)
+async def validation_error_handler(request: Request, exc: ValidationError):
+    return JSONResponse(
+        status_code=400,
+        content={"detail": str(exc.message)}
+    )
 
-@app.get("/health")
-def health_check():
-    return {"status": "ok"}
+@app.exception_handler(DatabaseError)
+async def database_error_handler(request: Request, exc: DatabaseError):
+    logger.error(f"Database error: {exc.message}")
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Database operation failed"}
+    )
 
-# Run: uvicorn app.main:app --reload
+@app.exception_handler(Exception)
+async def general_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Unhandled exception: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error"}
+    )
+
+# Include all routes
+app.include_router(health.router)
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
+app.include_router(markets.router, prefix="/api/v1/markets", tags=["Markets"])
+app.include_router(results.router, prefix="/api/v1/results", tags=["Results"])
+app.include_router(admin.router, prefix="/api/v1/admin", tags=["Admin"])
+app.include_router(public.router, prefix="/api/v1/public", tags=["Public"])
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "app.main:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=True
+    )

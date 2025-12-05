@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: smboss_api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_TYPE=mysql
+      - DB_HOST=localhost
+      - DB_PORT=3306
+      - DB_NAME=smboss_db
+      - DB_USER=root
+      - DB_PASSWORD=${DB_PASSWORD:-mysql}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key}
+      - DEBUG=False
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - smboss_network
+
+  mysql:
+    image: mysql:15-alpine
+    container_name: smboss_mysql
+    environment:
+      - mysql_DB=smboss_db
+      - mysql_USER=root
+      - mysql_PASSWORD=${DB_PASSWORD:-mysql}
+    volumes:
+      - mysql_data:/var/lib/mysql/data
+    networks:
+      - smboss_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: smboss_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - smboss_network
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  smboss_network:
+    driver: bridge

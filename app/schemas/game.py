@@ -1,23 +1,22 @@
+"""Game/Market schemas"""
+from pydantic import BaseModel, Field
 from typing import Optional
+from datetime import time
 
-from pydantic import BaseModel
+class GameCreateRequest(BaseModel):
+    game: str = Field(..., min_length=1, max_length=100)
+    open_time: Optional[time] = None
+    close_time: Optional[time] = None
+    status: int = 1
+    days: Optional[int] = None
 
-
-class GameConfig(BaseModel):
-    name: str
-    market: str
-    start_time: Optional[str] = None
-    status: str = "scheduled"
-
-
-class GameUpdate(GameConfig):
-    pass
-
-
-class GameOut(BaseModel):
-    id: int
-    name: str
-    market: str
-    status: str
-    start_time: Optional[str] = None
-
+class GameResponse(BaseModel):
+    sr_no: int
+    game: str
+    open_time: Optional[time]
+    close_time: Optional[time]
+    status: int
+    days: Optional[int]
+    
+    class Config:
+        from_attributes = True

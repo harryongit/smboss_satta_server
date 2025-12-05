@@ -1,37 +1,33 @@
-from typing import List, Dict, Any
-
+"""Result business logic"""
+from sqlalchemy.orm import Session
+from datetime import date
 from app.models.result import Result
-from app.core.time_utils import utc_now_iso
+from app.models.game import Game
 
-
-_results: List[Result] = []
-_id_seq = 1
-
-
-def _next_id() -> int:
-    global _id_seq
-    value = _id_seq
-    _id_seq += 1
-    return value
-
-
-def upload_result(game_id: int, payload: Dict[str, Any]) -> Result:
-    result = Result(id=_next_id(), game_id=game_id, data=payload)
-    _results.append(result)
-    return result
-
-
-def list_results() -> List[Result]:
-    return list(_results)
-
-
-def list_results_for_game(game_id: int) -> List[Result]:
-    return [r for r in _results if r.game_id == game_id]
-
-
-def live_results() -> List[Dict[str, Any]]:
-    return [
-        {"game_id": r.game_id, "data": r.data, "timestamp": utc_now_iso()}
-        for r in _results[-5:]
-    ]
-
+class ResultService:
+    @staticmethod
+    def get_live_results(db: Session, target_date: date = None):
+        if not target_date:
+            from datetime import datetime
+            target_date = datetime.now().date()
+        
+        return db.query(Result).filter(Result.result_date == target_date).all()
+    
+    @staticmethod
+    def get_market_history(db: Session, market_id: int, limit: int = 30):
+        return db.query(Result).filter(
+            Result.market_id == market_id
+        ).order_by(Result.result_date.desc()).limit(limit).all()
+    
+    @staticmethod
+    def create_result(db: Session, market_id: int, result: str, result_date: date):
+        result_obj = Result(
+            market_id=market_id,
+            result=result,
+            result_date=result_date,
+            status=0
+        )
+        db.add(result_obj)
+        db.commit()
+        db.refresh(result_obj)
+        return result_obj

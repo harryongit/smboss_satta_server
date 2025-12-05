@@ -1,0 +1,95 @@
+2025-12-05 20:29:58,914 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-05 20:29:58,938 - app.main - INFO - Starting SMS BOSS FastAPI Application
+2025-12-05 20:29:58,945 - app.main - INFO - Starting SMS BOSS FastAPI Application
+2025-12-05 20:29:59,151 - app.main - INFO - Database tables created
+2025-12-05 20:29:59,153 - app.main - INFO - Background jobs scheduler started
+2025-12-05 20:29:59,153 - app.main - INFO - Background jobs scheduler started
+2025-12-05 20:30:07,725 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-05 20:30:07,746 - app.main - INFO - Starting SMS BOSS FastAPI Application
+2025-12-05 20:30:07,781 - app.main - INFO - Database tables created
+2025-12-05 20:30:07,784 - app.main - INFO - Background jobs scheduler started
+2025-12-05 20:30:07,793 - app.main - INFO - Shutting down SMS BOSS Application
+2025-12-05 20:30:07,795 - app.main - INFO - Background jobs scheduler stopped
+2025-12-05 20:37:11,294 - app.main - ERROR - Unhandled exception: (mysql.connector.errors.ProgrammingError) 1146 (42S02): Table 'smboss_db.game' doesn't exist
+[SQL: SELECT game.sr_no AS game_sr_no, game.game AS game_game, game.open_time AS game_open_time, game.close_time AS game_close_time, game.status AS game_status, game.days AS game_days, game.id AS game_id, game.created_at AS game_created_at, game.updated_at AS game_updated_at, game.is_active AS game_is_active 
+FROM game 
+WHERE game.status = %(status_1)s]
+[parameters: {'status_1': 1}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-12-05 20:45:11,379 - app.main - INFO - Shutting down SMS BOSS Application
+2025-12-05 20:45:11,384 - app.main - INFO - Background jobs scheduler stopped
+2025-12-05 20:45:18,289 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-05 20:45:18,350 - app.main - INFO - Starting SMS BOSS FastAPI Application
+2025-12-05 20:45:18,436 - app.main - INFO - Database tables created
+2025-12-05 20:45:18,441 - app.main - INFO - Background jobs scheduler started
+2025-12-05 20:45:36,632 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-05 20:45:36,705 - app.main - INFO - Starting SMS BOSS FastAPI Application
+2025-12-05 20:45:36,779 - app.main - INFO - Database tables created
+2025-12-05 20:45:36,783 - app.main - INFO - Background jobs scheduler started
+2025-12-05 20:52:41,685 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-05 20:52:41,735 - app.main - INFO - Starting SMS BOSS FastAPI Application
+2025-12-05 20:52:41,785 - app.main - INFO - Database tables created
+2025-12-05 20:52:41,787 - app.main - INFO - Background jobs scheduler started
+2025-12-05 20:52:41,790 - app.main - INFO - Shutting down SMS BOSS Application
+2025-12-05 20:52:41,792 - app.main - INFO - Background jobs scheduler stopped
+2025-12-05 20:55:12,435 - app.main - INFO - Shutting down SMS BOSS Application
+2025-12-05 20:55:12,437 - app.main - INFO - Background jobs scheduler stopped
+2025-12-05 20:55:15,495 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-05 20:55:15,527 - app.main - INFO - Starting SMS BOSS FastAPI Application
+2025-12-05 20:55:15,567 - app.main - INFO - Database tables created
+2025-12-05 20:55:15,572 - app.main - INFO - Background jobs scheduler started
+2025-12-05 21:00:00,006 - app.jobs.cache_warmer - INFO - Starting cache warming
+2025-12-05 21:00:00,006 - app.jobs.cache_warmer - INFO - Starting cache warming
+2025-12-05 21:00:00,008 - app.jobs.sync_results - INFO - Starting result sync job
+2025-12-05 21:00:00,008 - app.jobs.sync_results - INFO - Starting result sync job
+2025-12-05 21:00:00,019 - app.jobs.sync_results - INFO - Result sync job completed successfully
+2025-12-05 21:00:00,029 - app.jobs.sync_results - INFO - Result sync job completed successfully
+2025-12-05 21:00:00,035 - app.jobs.cache_warmer - ERROR - Error in cache warmer job: (mysql.connector.errors.ProgrammingError) 1146 (42S02): Table 'smboss_db.game' doesn't exist
+[SQL: SELECT game.sr_no AS game_sr_no, game.game AS game_game, game.open_time AS game_open_time, game.close_time AS game_close_time, game.status AS game_status, game.days AS game_days, game.id AS game_id, game.created_at AS game_created_at, game.updated_at AS game_updated_at, game.is_active AS game_is_active 
+FROM game 
+WHERE game.status = %(status_1)s]
+[parameters: {'status_1': 1}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-12-05 21:00:00,038 - app.jobs.cache_warmer - ERROR - Error in cache warmer job: (mysql.connector.errors.ProgrammingError) 1146 (42S02): Table 'smboss_db.game' doesn't exist
+[SQL: SELECT game.sr_no AS game_sr_no, game.game AS game_game, game.open_time AS game_open_time, game.close_time AS game_close_time, game.status AS game_status, game.days AS game_days, game.id AS game_id, game.created_at AS game_created_at, game.updated_at AS game_updated_at, game.is_active AS game_is_active 
+FROM game 
+WHERE game.status = %(status_1)s]
+[parameters: {'status_1': 1}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-12-05 21:01:03,419 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-05 21:01:03,434 - app.main - INFO - Starting SMS BOSS FastAPI Application
+2025-12-05 21:01:03,460 - app.main - INFO - Database tables created
+2025-12-05 21:01:03,462 - app.main - INFO - Background jobs scheduler started
+2025-12-05 21:02:05,816 - app.main - ERROR - Unhandled exception: (mysql.connector.errors.ProgrammingError) 1146 (42S02): Table 'smboss_db.game_results' doesn't exist
+[SQL: SELECT game_results.sr_no AS game_results_sr_no, game_results.market_id AS game_results_market_id, game_results.result AS game_results_result, game_results.result_date AS game_results_result_date, game_results.date AS game_results_date, game_results.status AS game_results_status, game_results.id AS game_results_id, game_results.created_at AS game_results_created_at, game_results.updated_at AS game_results_updated_at, game_results.is_active AS game_results_is_active 
+FROM game_results 
+WHERE game_results.result_date = %(result_date_1)s]
+[parameters: {'result_date_1': datetime.date(2025, 12, 5)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-12-05 21:02:16,099 - app.main - ERROR - Unhandled exception: (mysql.connector.errors.ProgrammingError) 1146 (42S02): Table 'smboss_db.game_results' doesn't exist
+[SQL: SELECT game_results.sr_no AS game_results_sr_no, game_results.market_id AS game_results_market_id, game_results.result AS game_results_result, game_results.result_date AS game_results_result_date, game_results.date AS game_results_date, game_results.status AS game_results_status, game_results.id AS game_results_id, game_results.created_at AS game_results_created_at, game_results.updated_at AS game_results_updated_at, game_results.is_active AS game_results_is_active 
+FROM game_results 
+WHERE game_results.result_date = %(result_date_1)s]
+[parameters: {'result_date_1': datetime.date(2025, 12, 5)}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-12-05 21:05:12,903 - app.main - INFO - Shutting down SMS BOSS Application
+2025-12-05 21:05:12,904 - app.main - INFO - Background jobs scheduler stopped
+2025-12-05 21:05:15,145 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-05 21:05:15,181 - app.main - INFO - Starting SMS BOSS FastAPI Application
+2025-12-05 21:05:15,210 - app.main - INFO - Database tables created
+2025-12-05 21:05:15,213 - app.main - INFO - Background jobs scheduler started
+2025-12-05 21:15:13,322 - app.main - INFO - Shutting down SMS BOSS Application
+2025-12-05 21:15:13,322 - app.main - INFO - Background jobs scheduler stopped
+2025-12-05 21:15:16,170 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-05 21:15:16,199 - app.main - INFO - Starting SMS BOSS FastAPI Application
+2025-12-05 21:15:16,246 - app.main - INFO - Database tables created
+2025-12-05 21:15:16,249 - app.main - INFO - Background jobs scheduler started
+2025-12-05 21:24:12,693 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-05 21:25:14,302 - app.main - INFO - Shutting down SMS BOSS Application
+2025-12-05 21:25:14,304 - app.main - INFO - Background jobs scheduler stopped
+2025-12-05 21:25:21,287 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-05 21:25:21,487 - app.main - INFO - Starting SMS BOSS FastAPI Application
+2025-12-05 21:25:21,567 - app.main - INFO - Database tables created
+2025-12-05 21:25:21,571 - app.main - INFO - Background jobs scheduler started
+2025-12-05 21:53:23,811 - app.main - INFO - Shutting down SMS BOSS Application
+2025-12-05 21:53:23,812 - app.main - INFO - Background jobs scheduler stopped

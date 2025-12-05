@@ -21,3 +21,28 @@ Project scaffold for a FastAPI backend with public, user, and admin APIs.
 - This scaffold uses in-memory stores for demonstration; replace with real DB logic in `database.py` and services.
 
 "# smboss_satta_server" 
+
+
+# 1. Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Setup environment
+cp .env.example .env
+# Edit .env with your database credentials
+
+# 4. Initialize database
+python scripts/init_db.py
+
+# 5. Run migrations
+alembic upgrade head
+
+# 6. Start server
+uvicorn app.main:app --reload
+
+# 7. Visit API documentation
+# Swagger UI: http://localhost:8000/docs
+# ReDoc: http://localhost:8000/redoc
