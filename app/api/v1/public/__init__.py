@@ -1,0 +1,2 @@
+# Public routes package
+
