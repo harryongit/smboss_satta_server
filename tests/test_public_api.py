@@ -7,11 +7,11 @@ client = TestClient(app)
 
 
 def test_markets():
-    resp = client.get("/api/markets")
+    resp = client.get("/public/markets")
     assert resp.status_code == 200
 
 
 def test_offers():
-    resp = client.get("/api/offers")
+    resp = client.get("/public/offers")
     assert resp.status_code == 200
 

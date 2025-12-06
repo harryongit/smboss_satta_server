@@ -56,3 +56,148 @@ WHERE tbl_register.username = %(username_1)s
 2025-12-05 23:00:00,092 - app.jobs.cache_warmer - INFO - Cache warming completed successfully
 2025-12-05 23:02:45,540 - app.main - INFO - Shutting down SMBOSS Application
 2025-12-05 23:02:45,540 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 10:38:43,189 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 10:38:43,246 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 10:38:43,569 - app.main - INFO - Database tables created
+2025-12-06 10:38:43,569 - app.main - INFO - Background jobs scheduler started
+2025-12-06 10:39:13,408 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 10:39:13,409 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 10:39:17,687 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 10:39:17,778 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 10:39:17,842 - app.main - INFO - Database tables created
+2025-12-06 10:39:17,844 - app.main - INFO - Background jobs scheduler started
+2025-12-06 10:39:55,485 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 10:39:55,485 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 10:40:45,475 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 10:40:45,693 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 10:40:45,865 - app.main - INFO - Database tables created
+2025-12-06 10:40:45,865 - app.main - INFO - Background jobs scheduler started
+2025-12-06 10:42:23,871 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 10:42:23,873 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 10:42:29,803 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 10:42:29,986 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 10:42:30,116 - app.main - INFO - Database tables created
+2025-12-06 10:42:30,119 - app.main - INFO - Background jobs scheduler started
+2025-12-06 10:44:38,600 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 10:44:38,602 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 10:46:37,321 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 10:46:37,394 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 10:46:37,493 - app.main - INFO - Database tables created
+2025-12-06 10:46:37,502 - app.main - INFO - Background jobs scheduler started
+2025-12-06 10:51:35,130 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 10:51:35,132 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 10:51:40,089 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 10:51:40,269 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 10:51:40,373 - app.main - INFO - Database tables created
+2025-12-06 10:51:40,373 - app.main - INFO - Background jobs scheduler started
+2025-12-06 10:55:57,502 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 10:55:57,505 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 11:12:16,159 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 11:12:26,061 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 11:12:26,330 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 11:12:26,483 - app.main - INFO - Database tables created
+2025-12-06 11:12:26,492 - app.main - INFO - Background jobs scheduler started
+2025-12-06 11:15:08,161 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 11:15:08,162 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 11:15:13,438 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 11:15:13,590 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 11:15:13,699 - app.main - INFO - Database tables created
+2025-12-06 11:15:13,702 - app.main - INFO - Background jobs scheduler started
+2025-12-06 11:25:08,930 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 11:25:08,931 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 11:25:11,501 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 11:25:11,571 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 11:25:11,643 - app.main - INFO - Database tables created
+2025-12-06 11:25:11,646 - app.main - INFO - Background jobs scheduler started
+2025-12-06 11:30:09,372 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 11:30:09,374 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 11:30:15,351 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 11:30:15,511 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 11:30:15,611 - app.main - INFO - Database tables created
+2025-12-06 11:30:15,619 - app.main - INFO - Background jobs scheduler started
+2025-12-06 11:35:10,840 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 11:35:10,840 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 11:35:13,025 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 11:35:13,096 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 11:35:13,152 - app.main - INFO - Database tables created
+2025-12-06 11:35:13,160 - app.main - INFO - Background jobs scheduler started
+2025-12-06 11:35:15,203 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 11:35:15,275 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 11:35:15,322 - app.main - INFO - Database tables created
+2025-12-06 11:35:15,322 - app.main - INFO - Background jobs scheduler started
+2025-12-06 11:40:13,595 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 11:40:13,595 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 11:40:17,390 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 11:40:17,466 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 11:40:17,551 - app.main - INFO - Database tables created
+2025-12-06 11:40:17,552 - app.main - INFO - Background jobs scheduler started
+2025-12-06 11:50:14,723 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 11:50:14,727 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 11:50:18,023 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 11:50:18,083 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 11:50:18,150 - app.main - INFO - Database tables created
+2025-12-06 11:50:18,152 - app.main - INFO - Background jobs scheduler started
+2025-12-06 11:52:16,020 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 11:52:16,022 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 11:55:28,344 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 11:55:28,494 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 11:55:28,603 - app.main - INFO - Database tables created
+2025-12-06 11:55:28,609 - app.main - INFO - Background jobs scheduler started
+2025-12-06 11:55:58,689 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 11:55:58,695 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 11:56:02,814 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 11:56:02,921 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 11:56:02,994 - app.main - INFO - Database tables created
+2025-12-06 11:56:03,005 - app.main - INFO - Background jobs scheduler started
+2025-12-06 11:56:33,146 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 11:56:33,147 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 11:56:38,817 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 11:56:39,036 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 11:56:39,169 - app.main - INFO - Database tables created
+2025-12-06 11:56:39,174 - app.main - INFO - Background jobs scheduler started
+2025-12-06 11:58:32,494 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 11:58:32,495 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 11:58:35,596 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 11:58:35,651 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 11:58:35,731 - app.main - INFO - Database tables created
+2025-12-06 11:58:35,734 - app.main - INFO - Background jobs scheduler started
+2025-12-06 12:00:00,015 - app.jobs.cache_warmer - INFO - Starting cache warming
+2025-12-06 12:00:00,132 - app.jobs.cache_warmer - INFO - Cached 0 markets
+2025-12-06 12:00:00,143 - app.jobs.cache_warmer - INFO - Cached 0 results for today
+2025-12-06 12:00:00,143 - app.jobs.cache_warmer - INFO - Cache warming completed successfully
+2025-12-06 12:00:00,168 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 12:00:00,168 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 12:00:02,401 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 12:00:02,451 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 12:00:02,526 - app.main - INFO - Database tables created
+2025-12-06 12:00:02,526 - app.main - INFO - Background jobs scheduler started
+2025-12-06 12:00:04,579 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 12:00:04,641 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 12:00:04,706 - app.main - INFO - Database tables created
+2025-12-06 12:00:04,709 - app.main - INFO - Background jobs scheduler started
+2025-12-06 12:00:16,837 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 12:00:16,837 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 13:18:03,108 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 13:18:03,165 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 13:18:03,308 - app.main - INFO - Database tables created
+2025-12-06 13:18:03,308 - app.main - INFO - Background jobs scheduler started
+2025-12-06 13:33:24,272 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 13:33:24,272 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 13:39:18,104 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 13:39:18,245 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 13:39:18,332 - app.main - INFO - Database tables created
+2025-12-06 13:39:18,335 - app.main - INFO - Background jobs scheduler started
+2025-12-06 13:42:09,674 - app.main - INFO - Shutting down SMBOSS Application
+2025-12-06 13:42:09,676 - app.main - INFO - Background jobs scheduler stopped
+2025-12-06 13:42:16,337 - app.jobs.scheduler - INFO - Background jobs configured
+2025-12-06 13:42:16,520 - app.main - INFO - Starting SMBOSS FastAPI Application
+2025-12-06 13:42:16,657 - app.main - INFO - Database tables created
+2025-12-06 13:42:16,668 - app.main - INFO - Background jobs scheduler started
+2025-12-06 14:00:00,013 - app.jobs.cache_warmer - INFO - Starting cache warming
+2025-12-06 14:00:00,111 - app.jobs.cache_warmer - INFO - Cached 0 markets
+2025-12-06 14:00:00,122 - app.jobs.cache_warmer - INFO - Cached 0 results for today
+2025-12-06 14:00:00,124 - app.jobs.cache_warmer - INFO - Cache warming completed successfully
+2025-12-06 23:00:00,013 - app.jobs.cache_warmer - INFO - Starting cache warming
+2025-12-06 23:00:00,038 - app.jobs.cache_warmer - INFO - Cached 0 markets
+2025-12-06 23:00:00,042 - app.jobs.cache_warmer - INFO - Cached 0 results for today
+2025-12-06 23:00:00,043 - app.jobs.cache_warmer - INFO - Cache warming completed successfully

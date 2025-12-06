@@ -4,19 +4,33 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.security import get_current_admin
 from app.models.game import Game
-from app.schemas.game import GameCreateRequest, GameResponse
+from app.schemas.game import GameCreateRequest
 from app.services.result_service import ResultService
-from app.models.result import Result
 from app.services.game_service import GameService
 
 router = APIRouter()
 
-@router.get("", response_model=list[GameResponse])
+@router.get(
+    "",
+    response_model=dict,
+    responses={
+        200: {"content": {"application/json": {"example": [{"sr_no": 1, "game": "Market A", "open_time": "09:00:00", "close_time": "21:00:00", "status": 1, "days": None}]}}},
+        500: {"content": {"application/json": {"example": {"detail": "Internal server error"}}}},
+    },
+)
 async def get_all_markets(db: Session = Depends(get_db)):
     """Get all active markets"""
-    return GameService.get_all_games(db)
+    items = GameService.get_all_games(db)
+    return {"http_status": 200, "success": True, "message": "Markets fetched", "data": items}
 
-@router.get("/{market_id}", response_model=GameResponse)
+@router.get(
+    "/{market_id}",
+    response_model=dict,
+    responses={
+        200: {"content": {"application/json": {"example": {"sr_no": 1, "game": "Market A", "open_time": "09:00:00", "close_time": "21:00:00", "status": 1, "days": None}}}},
+        404: {"content": {"application/json": {"example": {"detail": "Market not found"}}}},
+    },
+)
 async def get_market(market_id: int, db: Session = Depends(get_db)):
     """Get market details"""
     market = GameService.get_game_by_id(db, market_id)
@@ -25,9 +39,15 @@ async def get_market(market_id: int, db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Market not found"
         )
-    return market
+    return {"http_status": 200, "success": True, "message": "Market fetched", "data": market}
 
-@router.get("/{market_id}/results")
+@router.get(
+    "/{market_id}/results",
+    responses={
+        200: {"content": {"application/json": {"example": {"status": "success", "market_id": 1, "market_name": "Market A", "results": [{"result": "123-45-678", "result_date": "2025-12-06", "timestamp": "2025-12-06T12:00:00Z"}], "count": 1}}}},
+        404: {"content": {"application/json": {"example": {"detail": "Market not found"}}}},
+    },
+)
 async def get_market_results(
     market_id: int,
     limit: int = 30,
@@ -42,21 +62,34 @@ async def get_market_results(
         )
     results = ResultService.get_market_history(db, market_id, limit)
     return {
-        "status": "success",
-        "market_id": market_id,
-        "market_name": market.game,
-        "results": [
+        "http_status": 200,
+        "success": True,
+        "message": "Results fetched",
+        "data": {
+            "market_id": market_id,
+            "market_name": market.game,
+            "results": [
             {
                 "result": r.result,
                 "result_date": str(r.result_date),
                 "timestamp": r.date.isoformat()
             }
             for r in results
-        ],
-        "count": len(results)
+            ],
+            "count": len(results)
+        }
     }
 
-@router.post("", response_model=dict)
+@router.post(
+    "",
+    response_model=dict,
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        201: {"content": {"application/json": {"example": {"status": "success", "message": "Market created successfully", "market_id": 1}}}},
+        400: {"content": {"application/json": {"example": {"detail": "Market already exists"}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def create_market(
     request: GameCreateRequest,
     current_user: dict = Depends(get_current_admin),
@@ -77,13 +110,17 @@ async def create_market(
         request.close_time
     )
     
-    return {
-        "status": "success",
-        "message": "Market created successfully",
-        "market_id": game.sr_no
-    }
+    return {"http_status": 201, "success": True, "message": "Market created", "data": {"market_id": game.sr_no}}
 
-@router.put("/{market_id}", response_model=dict)
+@router.put(
+    "/{market_id}",
+    response_model=dict,
+    responses={
+        200: {"content": {"application/json": {"example": {"status": "success", "message": "Market updated successfully"}}}},
+        404: {"content": {"application/json": {"example": {"detail": "Market not found"}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def update_market(
     market_id: int,
     request: GameCreateRequest,
@@ -105,9 +142,17 @@ async def update_market(
     
     db.commit()
     
-    return {"status": "success", "message": "Market updated successfully"}
+    return {"http_status": 200, "success": True, "message": "Market updated", "data": {}}
 
-@router.delete("/{market_id}", response_model=dict)
+@router.delete(
+    "/{market_id}",
+    response_model=dict,
+    responses={
+        200: {"content": {"application/json": {"example": {"status": "success", "message": "Market deleted successfully"}}}},
+        404: {"content": {"application/json": {"example": {"detail": "Market not found"}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def delete_market(
     market_id: int,
     current_user: dict = Depends(get_current_admin),
@@ -124,4 +169,4 @@ async def delete_market(
     db.delete(market)
     db.commit()
     
-    return {"status": "success", "message": "Market deleted successfully"}
+    return {"http_status": 200, "success": True, "message": "Market deleted", "data": {}}

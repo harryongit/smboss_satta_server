@@ -18,7 +18,13 @@ from app.jobs.sync_results import ResultSyncJob
 
 router = APIRouter()
 
-@router.get("/dashboard")
+@router.get(
+    "/dashboard",
+    responses={
+        200: {"content": {"application/json": {"example": {"status": "success", "stats": {"total_users": 10, "total_markets": 5, "total_results": 100, "timestamp": "2025-12-06T12:00:00Z"}}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def admin_dashboard(
     current_user: dict = Depends(get_current_admin),
     db: Session = Depends(get_db)
@@ -29,16 +35,26 @@ async def admin_dashboard(
     total_results = db.query(Result).count()
     
     return {
-        "status": "success",
-        "stats": {
-            "total_users": total_users,
-            "total_markets": total_markets,
-            "total_results": total_results,
-            "timestamp": datetime.utcnow().isoformat()
+        "http_status": 200,
+        "success": True,
+        "message": "OK",
+        "data": {
+            "stats": {
+                "total_users": total_users,
+                "total_markets": total_markets,
+                "total_results": total_results,
+                "timestamp": datetime.utcnow().isoformat()
+            }
         }
     }
 
-@router.get("/users")
+@router.get(
+    "/users",
+    responses={
+        200: {"content": {"application/json": {"example": {"status": "success", "users": [{"id": 1, "username": "user1", "mobile": "9999999999", "email": None, "status": 1, "created_at": "2025-12-01T12:00:00Z"}], "total": 1, "limit": 50, "offset": 0}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def list_users(
     limit: int = 50,
     offset: int = 0,
@@ -49,8 +65,11 @@ async def list_users(
     total = db.query(User).count()
     
     return {
-        "status": "success",
-        "users": [
+        "http_status": 200,
+        "success": True,
+        "message": "Users fetched",
+        "data": {
+            "users": [
             {
                 "id": u.id,
                 "username": u.username,
@@ -60,10 +79,11 @@ async def list_users(
                 "created_at": u.created_at.isoformat()
             }
             for u in users
-        ],
-        "total": total,
-        "limit": limit,
-        "offset": offset
+            ],
+            "total": total,
+            "limit": limit,
+            "offset": offset
+        }
     }
 
 class UserUpdateRequest(BaseModel):
@@ -72,7 +92,15 @@ class UserUpdateRequest(BaseModel):
     password: Optional[str] = Field(None, min_length=8)
     status: Optional[int] = None
 
-@router.post("/users")
+@router.post(
+    "/users",
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        201: {"content": {"application/json": {"example": {"status": "success", "user_id": 1}}}},
+        400: {"content": {"application/json": {"example": {"detail": "Username already exists"}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def create_user(
     request: UserRegisterRequest,
     current_user: dict = Depends(get_current_admin),
@@ -96,9 +124,16 @@ async def create_user(
     db.add(user)
     db.commit()
     db.refresh(user)
-    return {"status": "success", "user_id": user.id}
+    return {"http_status": 201, "success": True, "message": "User created", "data": {"user_id": user.id}}
 
-@router.put("/users/{user_id}")
+@router.put(
+    "/users/{user_id}",
+    responses={
+        200: {"content": {"application/json": {"example": {"status": "success", "message": "User updated"}}}},
+        404: {"content": {"application/json": {"example": {"detail": "User not found"}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def update_user(
     user_id: int,
     request: UserUpdateRequest,
@@ -118,9 +153,16 @@ async def update_user(
     if request.status is not None:
         user.status = request.status
     db.commit()
-    return {"status": "success", "message": "User updated"}
+    return {"http_status": 200, "success": True, "message": "User updated", "data": {}}
 
-@router.delete("/users/{user_id}")
+@router.delete(
+    "/users/{user_id}",
+    responses={
+        200: {"content": {"application/json": {"example": {"status": "success", "message": "User deleted"}}}},
+        404: {"content": {"application/json": {"example": {"detail": "User not found"}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def delete_user(
     user_id: int,
     current_user: dict = Depends(get_current_admin),
@@ -131,9 +173,15 @@ async def delete_user(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     db.delete(user)
     db.commit()
-    return {"status": "success", "message": "User deleted"}
+    return {"http_status": 200, "success": True, "message": "User deleted", "data": {}}
 
-@router.get("/markets")
+@router.get(
+    "/markets",
+    responses={
+        200: {"content": {"application/json": {"example": {"status": "success", "markets": [{"sr_no": 1, "game": "Market A", "open_time": "09:00:00", "close_time": "21:00:00", "status": 1}], "total": 1}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def list_markets(
     current_user: dict = Depends(get_current_admin),
     db: Session = Depends(get_db)
@@ -142,8 +190,11 @@ async def list_markets(
     markets = db.query(Game).all()
     
     return {
-        "status": "success",
-        "markets": [
+        "http_status": 200,
+        "success": True,
+        "message": "Markets fetched",
+        "data": {
+            "markets": [
             {
                 "sr_no": m.sr_no,
                 "game": m.game,
@@ -152,11 +203,19 @@ async def list_markets(
                 "status": m.status
             }
             for m in markets
-        ],
-        "total": len(markets)
+            ],
+            "total": len(markets)
+        }
     }
 
-@router.post("/users/{user_id}/activate")
+@router.post(
+    "/users/{user_id}/activate",
+    responses={
+        200: {"content": {"application/json": {"example": {"status": "success", "message": "User activated"}}}},
+        404: {"content": {"application/json": {"example": {"detail": "User not found"}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def activate_user(
     user_id: int,
     current_user: dict = Depends(get_current_admin),
@@ -173,9 +232,16 @@ async def activate_user(
     user.status = 1
     db.commit()
     
-    return {"status": "success", "message": "User activated"}
+    return {"http_status": 200, "success": True, "message": "User activated", "data": {}}
 
-@router.post("/users/{user_id}/deactivate")
+@router.post(
+    "/users/{user_id}/deactivate",
+    responses={
+        200: {"content": {"application/json": {"example": {"status": "success", "message": "User deactivated"}}}},
+        404: {"content": {"application/json": {"example": {"detail": "User not found"}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def deactivate_user(
     user_id: int,
     current_user: dict = Depends(get_current_admin),
@@ -191,9 +257,15 @@ async def deactivate_user(
     user.status = 0
     db.commit()
     
-    return {"status": "success", "message": "User deactivated"}
+    return {"http_status": 200, "success": True, "message": "User deactivated", "data": {}}
 
-@router.get("/rashi")
+@router.get(
+    "/rashi",
+    responses={
+        200: {"content": {"application/json": {"example": {"status": "success", "results": [{"sr_no": 1, "rashi_name": "Aries", "result": "Lucky", "result_date": "2025-12-06"}], "total": 1, "limit": 50, "offset": 0}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def admin_get_rashi(
     target_date: Optional[date] = None,
     limit: int = 50,
@@ -207,8 +279,11 @@ async def admin_get_rashi(
     items = query.order_by(Rashi.result_date.desc()).limit(limit).offset(offset).all()
     total = query.count()
     return {
-        "status": "success",
-        "results": [
+        "http_status": 200,
+        "success": True,
+        "message": "Rashi fetched",
+        "data": {
+            "results": [
             {
                 "sr_no": r.sr_no,
                 "rashi_name": r.rashi_name,
@@ -216,10 +291,11 @@ async def admin_get_rashi(
                 "result_date": str(r.result_date)
             }
             for r in items
-        ],
-        "total": total,
-        "limit": limit,
-        "offset": offset
+            ],
+            "total": total,
+            "limit": limit,
+            "offset": offset
+        }
     }
 
 class RashiCreateRequest(BaseModel):
@@ -227,7 +303,14 @@ class RashiCreateRequest(BaseModel):
     result: str
     result_date: date
 
-@router.post("/rashi")
+@router.post(
+    "/rashi",
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        201: {"content": {"application/json": {"example": {"status": "success", "id": 1}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def admin_add_rashi(
     request: RashiCreateRequest,
     current_user: dict = Depends(get_current_admin),
@@ -237,9 +320,15 @@ async def admin_add_rashi(
     db.add(obj)
     db.commit()
     db.refresh(obj)
-    return {"status": "success", "id": obj.sr_no}
+    return {"http_status": 201, "success": True, "message": "Rashi created", "data": {"id": obj.sr_no}}
 
-@router.get("/starline")
+@router.get(
+    "/starline",
+    responses={
+        200: {"content": {"application/json": {"example": {"status": "success", "results": [{"sr_no": 1, "market_id": 1, "number": "12", "result_date": "2025-12-06"}], "total": 1, "limit": 50, "offset": 0}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def admin_get_starline(
     market_id: Optional[int] = None,
     target_date: Optional[date] = None,
@@ -256,8 +345,11 @@ async def admin_get_starline(
     items = query.order_by(StarLine.result_date.desc()).limit(limit).offset(offset).all()
     total = query.count()
     return {
-        "status": "success",
-        "results": [
+        "http_status": 200,
+        "success": True,
+        "message": "Starline fetched",
+        "data": {
+            "results": [
             {
                 "sr_no": s.sr_no,
                 "market_id": s.market_id,
@@ -266,9 +358,10 @@ async def admin_get_starline(
             }
             for s in items
         ],
-        "total": total,
-        "limit": limit,
-        "offset": offset
+            "total": total,
+            "limit": limit,
+            "offset": offset
+        }
     }
 
 class PredictionCreateRequest(BaseModel):
@@ -277,7 +370,14 @@ class PredictionCreateRequest(BaseModel):
     added_date: date
     accuracy: Optional[int] = None
 
-@router.post("/predictions")
+@router.post(
+    "/predictions",
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        201: {"content": {"application/json": {"example": {"status": "success", "id": 1}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def admin_add_prediction(
     request: PredictionCreateRequest,
     current_user: dict = Depends(get_current_admin),
@@ -293,16 +393,28 @@ async def admin_add_prediction(
     db.add(obj)
     db.commit()
     db.refresh(obj)
-    return {"status": "success", "id": obj.sr_no}
+    return {"http_status": 201, "success": True, "message": "Prediction created", "data": {"id": obj.sr_no}}
 
-@router.post("/sync")
+@router.post(
+    "/sync",
+    responses={
+        200: {"content": {"application/json": {"example": {"status": "success", "message": "Sync started"}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def admin_sync_results(
     current_user: dict = Depends(get_current_admin)
 ):
     ResultSyncJob.sync_results()
-    return {"status": "success", "message": "Sync started"}
+    return {"http_status": 200, "success": True, "message": "Sync started", "data": {}}
 
-@router.get("/logs")
+@router.get(
+    "/logs",
+    responses={
+        200: {"content": {"application/json": {"example": {"status": "success", "logs": [{"sr_no": 1, "user_id": 1, "action": "update", "entity_type": "result", "entity_id": 10, "timestamp": "2025-12-06T12:00:00Z"}], "total": 1, "limit": 50, "offset": 0}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin privileges required"}}}},
+    },
+)
 async def admin_get_logs(
     user_id: Optional[int] = None,
     limit: int = 50,
@@ -316,8 +428,11 @@ async def admin_get_logs(
     logs = query.order_by(AuditLog.timestamp.desc()).limit(limit).offset(offset).all()
     total = query.count()
     return {
-        "status": "success",
-        "logs": [
+        "http_status": 200,
+        "success": True,
+        "message": "Logs fetched",
+        "data": {
+            "logs": [
             {
                 "sr_no": l.sr_no,
                 "user_id": l.user_id,
@@ -327,8 +442,9 @@ async def admin_get_logs(
                 "timestamp": l.timestamp.isoformat()
             }
             for l in logs
-        ],
-        "total": total,
-        "limit": limit,
-        "offset": offset
+            ],
+            "total": total,
+            "limit": limit,
+            "offset": offset
+        }
     }

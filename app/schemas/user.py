@@ -26,6 +26,7 @@ class UserLoginResponse(BaseModel):
     refresh_token: str
     token_type: str = "bearer"
     user: dict
+    http_status: int = 200
 
 class UserResponse(BaseModel):
     id: int

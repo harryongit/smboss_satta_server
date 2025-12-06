@@ -17,7 +17,26 @@ router = APIRouter()
 
 # Registration is disabled per requirements
 
-@router.post("/login", response_model=UserLoginResponse)
+@router.post(
+    "/login/user",
+    responses={
+        200: {
+            "content": {
+                "application/json": {
+                    "example": {
+                        "access_token": "<jwt>",
+                        "refresh_token": "<jwt>",
+                        "token_type": "bearer",
+                        "user": {"id": 1, "username": "user1", "mobile": "9999999999"}
+                    }
+                }
+            }
+        },
+        401: {"content": {"application/json": {"example": {"detail": "Invalid credentials"}}}},
+        403: {"content": {"application/json": {"example": {"detail": "User account is inactive"}}}},
+        500: {"content": {"application/json": {"example": {"detail": "Internal server error"}}}},
+    },
+)
 async def login(request: UserLoginRequest, db: Session = Depends(get_db)):
     """User login"""
     user = db.query(User).filter(User.username == request.username).first()
@@ -42,17 +61,42 @@ async def login(request: UserLoginRequest, db: Session = Depends(get_db)):
     )
     refresh_token = create_refresh_token(data={"sub": user.id, "role": "user"})
     
-    return UserLoginResponse(
-        access_token=access_token,
-        refresh_token=refresh_token,
-        user={
-            "id": user.id,
-            "username": user.username,
-            "mobile": user.mobile
+    return {
+        "http_status": 200,
+        "success": True,
+        "message": "Login successful",
+        "data": {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "token_type": "bearer",
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "mobile": user.mobile
+            }
         }
-    )
+    }
 
-@router.post("/admin/login", response_model=UserLoginResponse)
+@router.post(
+    "/login/admin",
+    responses={
+        200: {
+            "content": {
+                "application/json": {
+                    "example": {
+                        "access_token": "<jwt>",
+                        "refresh_token": "<jwt>",
+                        "token_type": "bearer",
+                        "user": {"id": 1, "username": "admin", "mobile": "0000000000"}
+                    }
+                }
+            }
+        },
+        401: {"content": {"application/json": {"example": {"detail": "Invalid credentials"}}}},
+        403: {"content": {"application/json": {"example": {"detail": "Admin account required"}}}},
+        500: {"content": {"application/json": {"example": {"detail": "Internal server error"}}}},
+    },
+)
 async def admin_login(request: UserLoginRequest, db: Session = Depends(get_db)):
     """Admin login"""
     user = db.query(User).filter(User.username == request.username).first()
@@ -94,17 +138,30 @@ async def admin_login(request: UserLoginRequest, db: Session = Depends(get_db)):
     )
     refresh_token = create_refresh_token(data={"sub": user.id, "role": "admin"})
     
-    return UserLoginResponse(
-        access_token=access_token,
-        refresh_token=refresh_token,
-        user={
-            "id": user.id,
-            "username": user.username,
-            "mobile": user.mobile
+    return {
+        "http_status": 200,
+        "success": True,
+        "message": "Login successful",
+        "data": {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "token_type": "bearer",
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "mobile": user.mobile
+            }
         }
-    )
+    }
 
-@router.post("/refresh-token")
+@router.post(
+    "/tokens/refresh",
+    responses={
+        200: {"content": {"application/json": {"example": {"access_token": "<jwt>", "token_type": "bearer"}}}},
+        401: {"content": {"application/json": {"example": {"detail": "Invalid refresh token"}}}},
+        500: {"content": {"application/json": {"example": {"detail": "Internal server error"}}}},
+    },
+)
 async def refresh_token(token: str):
     """Refresh access token"""
     payload = verify_token(token)
@@ -117,19 +174,33 @@ async def refresh_token(token: str):
     
     access_token = create_access_token(data={"sub": payload.get("sub")})
     return {
-        "access_token": access_token,
-        "token_type": "bearer"
+        "http_status": 200,
+        "success": True,
+        "message": "Token refreshed",
+        "data": {
+            "access_token": access_token,
+            "token_type": "bearer"
+        }
     }
 
-@router.post("/logout")
+@router.post(
+    "/logout",
+    responses={
+        200: {"content": {"application/json": {"example": {"status": "success", "message": "Logged out successfully"}}}},
+        401: {"content": {"application/json": {"example": {"detail": "Not authenticated"}}}},
+    },
+)
 async def logout(current_user: dict = Depends(get_current_user)):
     """Logout endpoint"""
-    return {"status": "success", "message": "Logged out successfully"}
+    return {"http_status": 200, "success": True, "message": "Logged out", "data": {"message": "Logged out successfully"}}
 
-@router.get("/verify")
+@router.get(
+    "/tokens/verify",
+    responses={
+        200: {"content": {"application/json": {"example": {"status": "success", "user": {"sub": 1, "username": "user1", "role": "user"}}}}},
+        401: {"content": {"application/json": {"example": {"detail": "Invalid token"}}}},
+    },
+)
 async def verify(current_user: dict = Depends(get_current_user)):
     """Verify active token"""
-    return {
-        "status": "success",
-        "user": current_user
-    }
+    return {"http_status": 200, "success": True, "message": "Token valid", "data": {"user": current_user}}

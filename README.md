@@ -25,7 +25,7 @@ Project scaffold for a FastAPI backend with public, user, and admin APIs.
 
 # 1. Create virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # 2. Install dependencies
 pip install -r requirements.txt
@@ -39,6 +39,8 @@ python scripts/init_db.py
 
 # 5. Run migrations
 alembic upgrade head
+
+mysql -h localhost -P 3306 -u root -p
 
 # 6. Start server
 uvicorn app.main:app --reload

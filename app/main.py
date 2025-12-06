@@ -67,14 +67,24 @@ app.add_middleware(
 async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(
         status_code=exc.status_code,
-        content={"detail": exc.detail}
+        content={
+            "http_status": exc.status_code,
+            "success": False,
+            "message": str(exc.detail),
+            "data": {"error": str(exc.detail)}
+        }
     )
 
 @app.exception_handler(ValidationError)
 async def validation_error_handler(request: Request, exc: ValidationError):
     return JSONResponse(
         status_code=400,
-        content={"detail": str(exc.message)}
+        content={
+            "http_status": 400,
+            "success": False,
+            "message": "Validation error",
+            "data": {"error": str(exc.message)}
+        }
     )
 
 @app.exception_handler(DatabaseError)
@@ -82,7 +92,12 @@ async def database_error_handler(request: Request, exc: DatabaseError):
     logger.error(f"Database error: {exc.message}")
     return JSONResponse(
         status_code=500,
-        content={"detail": "Database operation failed"}
+        content={
+            "http_status": 500,
+            "success": False,
+            "message": "Database operation failed",
+            "data": {"error": "Database operation failed"}
+        }
     )
 
 @app.exception_handler(Exception)
@@ -90,16 +105,21 @@ async def general_exception_handler(request: Request, exc: Exception):
     logger.error(f"Unhandled exception: {exc}")
     return JSONResponse(
         status_code=500,
-        content={"detail": "Internal server error"}
+        content={
+            "http_status": 500,
+            "success": False,
+            "message": "Internal server error",
+            "data": {"error": "Internal server error"}
+        }
     )
 
 # Include all routes
 app.include_router(health.router)
-app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
-app.include_router(markets.router, prefix="/api/v1/markets", tags=["Markets"])
-app.include_router(results.router, prefix="/api/v1/results", tags=["Results"])
-app.include_router(admin.router, prefix="/api/v1/admin", tags=["Admin"])
-app.include_router(public.router, prefix="/api/v1/public", tags=["Public"])
+app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
+app.include_router(markets.router, prefix="/markets", tags=["Markets"])
+app.include_router(results.router, prefix="/results", tags=["Results"])
+app.include_router(admin.router, prefix="/admin", tags=["Admin"])
+app.include_router(public.router, prefix="/public", tags=["Public"])
 
 if __name__ == "__main__":
     import uvicorn

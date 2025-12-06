@@ -10,26 +10,40 @@ router = APIRouter()
 async def health_check():
     """Basic health check"""
     return {
-        "status": "healthy",
-        "timestamp": datetime.utcnow().isoformat(),
-        "version": "2.0.0"
+        "http_status": 200,
+        "success": True,
+        "message": "OK",
+        "data": {
+            "status": "healthy",
+            "timestamp": datetime.utcnow().isoformat(),
+            "version": "2.0.0"
+        }
     }
 
-@router.get("/health/db")
+@router.get("/health/database")
 async def db_health_check(db: Session = Depends(get_db)):
     """Database health check"""
     is_connected = check_database_connection()
     return {
-        "status": "healthy" if is_connected else "unhealthy",
-        "database": "connected" if is_connected else "disconnected",
-        "timestamp": datetime.utcnow().isoformat()
+        "http_status": 200,
+        "success": True,
+        "message": "OK",
+        "data": {
+            "status": "healthy" if is_connected else "unhealthy",
+            "database": "connected" if is_connected else "disconnected",
+            "timestamp": datetime.utcnow().isoformat()
+        }
     }
 
 @router.get("/")
 async def root():
     """Root endpoint"""
     return {
-        "status": "success",
-        "message": "SMBOSS API v2.0.0",
-        "timestamp": datetime.utcnow().isoformat()
+        "http_status": 200,
+        "success": True,
+        "message": "OK",
+        "data": {
+            "message": "SMBOSS API v2.0.0",
+            "timestamp": datetime.utcnow().isoformat()
+        }
     }

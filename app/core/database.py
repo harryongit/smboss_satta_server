@@ -1,5 +1,5 @@
 """Database connection and session management"""
-from sqlalchemy import create_engine, inspect
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import sessionmaker, Session
 from typing import Generator
 import os
@@ -43,7 +43,7 @@ def get_db() -> Generator:
 def check_database_connection() -> bool:
     try:
         with engine.connect() as connection:
-            connection.execute("SELECT 1")
+            connection.execute(text("SELECT 1"))
         return True
     except Exception as e:
         print(f"Database connection failed: {e}")
